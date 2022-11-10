@@ -1,8 +1,12 @@
 # US-Arms-Overseas
 Group Members:
+
 Tom Fu: cfu19@ucsc.edu
+
 Turner Lu: tlu32@ucsc.edu
+
 Brian Le: ble98@ucsc.edu
+
 James Dinh: jatdinh@ucsc.edu
 
 ## 1. Why(Title and Purpose)
