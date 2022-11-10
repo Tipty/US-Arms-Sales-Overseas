@@ -29,6 +29,7 @@ https://www.statista.com/statistics/248558/us-arms-exports-by-weapon-category/
 https://www.sipri.org/sites/default/files/2020-07/us_655_fy2019_0.pdf
 
 ## 3. Visualization Design
+![My Image](protdesign.jpg)
 
 ## 4. Visualization Resources
 Global map (main visualization): countries that were sold are colored, lines going from us to country, Slider to adjust for year
