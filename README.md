@@ -5,11 +5,11 @@ Turner Lu: tlu32@ucsc.edu
 Brian Le: ble98@ucsc.edu
 James Dinh: jatdinh@ucsc.edu
 
-1. Why(Title and Purpose)
+## 1. Why(Title and Purpose)
 The purpose of our project is to visualize the arms trade America has dealt throughout the world from 2000 to 2019. Therefore, our title shall be US Arms Sales Overseas.
 Questions: What countries buy the most weapons from the United States? What year did the US sell the most weapons overseas? What types of weapons are sold most commonly?
 
-2. Data Design
+## 2. Data Design
 
 Countries that were sold weapons.
 https://www.statista.com/statistics/248552/us-arms-exports-by-country/ 
@@ -26,29 +26,9 @@ https://www.dsca.mil/press-media/major-arms-sales
 https://www.statista.com/statistics/248558/us-arms-exports-by-weapon-category/ 
 https://www.sipri.org/sites/default/files/2020-07/us_655_fy2019_0.pdf
 
+## 3. Visualization Design
 
-
-
-
-
-
-
-
-3. Visualization Design
-
-
-
-
-
-
-
-
-
-
-
-
-
-4. Visualization Resources
+## 4. Visualization Resources
 Global map (main visualization): countries that were sold are colored, lines going from us to country, Slider to adjust for year
 https://medium.com/@ivan.ha/using-d3-js-to-plot-an-interactive-map-34fbea76bd78
 Bar chart (optional visualization): Show amount gained from exporting weapons from a specific period (in this example 2000-2021)
