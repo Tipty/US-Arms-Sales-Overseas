@@ -5,8 +5,6 @@ Algeria,DZ,DZA,012,ISO 3166-2:DZ,Africa,Northern Africa,002,015
 American Samoa,AS,ASM,016,ISO 3166-2:AS,Oceania,Polynesia,009,061
 Andorra,AD,AND,020,ISO 3166-2:AD,Europe,Southern Europe,150,039
 Angola,AO,AGO,024,ISO 3166-2:AO,Africa,Middle Africa,002,017
-Anguilla,AI,AIA,660,ISO 3166-2:AI,Americas,Caribbean,019,029
-Antarctica,AQ,ATA,010,ISO 3166-2:AQ,,,,
 Antigua and Barbuda,AG,ATG,028,ISO 3166-2:AG,Americas,Caribbean,019,029
 Argentina,AR,ARG,032,ISO 3166-2:AR,Americas,South America,019,005
 Armenia,AM,ARM,051,ISO 3166-2:AM,Asia,Western Asia,142,145
@@ -77,14 +75,12 @@ Ghana,GH,GHA,288,ISO 3166-2:GH,Africa,Western Africa,002,011
 Greece,GR,GRC,300,ISO 3166-2:GR,Europe,Southern Europe,150,039
 Greenland,GL,GRL,304,ISO 3166-2:GL,Americas,Northern America,019,021
 Grenada,GD,GRD,308,ISO 3166-2:GD,Americas,Caribbean,019,029
-Guam,GU,GUM,316,ISO 3166-2:GU,Oceania,Micronesia,009,057
 Guatemala,GT,GTM,320,ISO 3166-2:GT,Americas,Central America,019,013
 Guinea,GN,GIN,324,ISO 3166-2:GN,Africa,Western Africa,002,011
 Guinea-Bissau,GW,GNB,624,ISO 3166-2:GW,Africa,Western Africa,002,011
 Guyana,GY,GUY,328,ISO 3166-2:GY,Americas,South America,019,005
 Haiti,HT,HTI,332,ISO 3166-2:HT,Americas,Caribbean,019,029
 Honduras,HN,HND,340,ISO 3166-2:HN,Americas,Central America,019,013
-Hong Kong,HK,HKG,344,ISO 3166-2:HK,Asia,Eastern Asia,142,030
 Hungary,HU,HUN,348,ISO 3166-2:HU,Europe,Eastern Europe,150,151
 Iceland,IS,ISL,352,ISO 3166-2:IS,Europe,Northern Europe,150,154
 India,IN,IND,356,ISO 3166-2:IN,Asia,Southern Asia,142,034

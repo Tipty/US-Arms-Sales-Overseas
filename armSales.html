@@ -15,7 +15,7 @@ svg {
 }
 div.tooltip {
       color: #222; 
-      background: #fff; 
+      background: #BDE8F0; 
       border-radius: 3px; 
       box-shadow: 0px 0px 2px 0px #a6a6a6; 
       padding: .2em; 
@@ -41,12 +41,12 @@ var path = d3.geoPath()
              .projection(projection);
 var svg = d3.select("svg")
             .append("g")
-            .attr("width", width+50)
-            .attr("height", height+20);
+            .attr("width", width)
+            .attr("height", height);
     
 var tooltip = d3.select("div.tooltip");
 d3.queue()
-  .defer(d3.json, "https://unpkg.com/world-atlas@2.0.2/countries-110m.json")
+  .defer(d3.json, "world-atlas.json")
   .defer(d3.csv, "world-country-names.csv")
   .await(ready);
 function ready(error, world, names) {
@@ -54,14 +54,15 @@ function ready(error, world, names) {
   var countries1 = topojson.feature(world, world.objects.countries).features;
     countries = countries1.filter(function(d) {
     return names.some(function(n) {
-      if (d.id == n.id) return d.name = n.name;
+      if (d.id == n.id) 
+          return d.name = n.name;   
     })});
   svg.selectAll("path")
 			.data(countries)
 			.enter()
 			.append("path")
 			.attr("stroke","black")
-			.attr("stroke-width",1)
+			.attr("stroke-width",0.65)
             .attr("fill", "grey")
 			.attr("d", path )
 			.on("mouseover",function(d,i){
@@ -75,7 +76,7 @@ function ready(error, world, names) {
                        .html(d.name);
             })
             .on("mouseout",function(d,i){
-                d3.select(this).attr("fill","grey").attr("stroke-width",1);
+                d3.select(this).attr("fill","grey").attr("stroke-width",0.65);
                 tooltip.classed("hidden", true);
             });
 };
