@@ -57,6 +57,15 @@ function ready(error, world, names) {
       if (d.id == n.id) 
           return d.name = n.name;   
     })});
+    
+    countries.map(function (d) {
+        names.filter(function (n) {
+          if (d.id == n.id) {
+            return (d.region = n.region);
+          }
+        });
+      });
+    
   svg.selectAll("path")
 			.data(countries)
 			.enter()
@@ -65,21 +74,36 @@ function ready(error, world, names) {
 			.attr("stroke-width",0.65)
             .attr("fill", "grey")
 			.attr("d", path )
-			.on("mouseover",function(d,i){
-                d3.select(this).attr("fill","red").attr("stroke-width",2);
-                return tooltip.style("hidden", false).html(d.name);
-            })
+			.on("mouseover",showTooltip)
             .on("mousemove",function(d){
                 tooltip.classed("hidden", false)
                        .style("top", (d3.event.pageY) + "px")
                        .style("left", (d3.event.pageX + 10) + "px")
-                       .html(d.name);
+                       .html(d.name + ", "+ d.region);
             })
-            .on("mouseout",function(d,i){
-                d3.select(this).attr("fill","grey").attr("stroke-width",0.65);
-                tooltip.classed("hidden", true);
-            });
+            .on("mouseout", removeTooltip);
 };
-
+function showTooltip(d){
+    if (d.region == "North America"){
+        fillColor = "green"
+    }else if (d.region == "Asia"){
+        fillColor = "yellow"
+    }else if (d.region == "Africa"){
+        fillColor = "orange"
+    }else if (d.region == "Oceania"){
+        fillColor = "purple"
+    }else if (d.region == "Europe"){
+        fillColor = "blue"
+    }
+    else{
+        fillColor = "red"
+    }
+    d3.select(this).attr("fill", fillColor);
+    return tooltip.style("hidden", false).html(d.name + ", "+ d.region);
+};
+function removeTooltip(d){
+    d3.select(this).attr("fill","grey").attr("stroke-width",0.65);
+    tooltip.classed("hidden", true);
+};
 </script>
 </body>
