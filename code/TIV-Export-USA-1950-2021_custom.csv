@@ -1,6 +1,6 @@
-Country,1950s,1960s,1970s,1980s,1990s,2000s,2010s
+country,fifties,sixties,seventies,eighties,nineties,twothousands,twentytens
 Afghanistan,0,0,0,66,0,399,2483
-African Unio,0,0,0,0,0,0,2
+African Union,0,0,0,0,0,0,2
 Albania,0,0,0,0,0,0,10
 Algeria,0,2,23,583,38,148,56
 Angola,0,0,0,31,6,0,3
@@ -164,7 +164,7 @@ United Nation,0,13,0,0,6,0,3
 Uruguay,140,55,104,51,44,0,0
 Uzbekistan,0,0,0,0,0,0,36
 Venezuela,278,165,638,786,101,31,6
-Viet Nam,0,0,0,0,0,0,54
+Vietnam,0,0,0,0,0,0,54
 Yemen,0,0,0,0,0,8,26
 Yugoslavia,2693,232,6,76,0,0,0
 Zambia,0,0,0,0,0,0,6

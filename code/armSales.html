@@ -48,8 +48,9 @@ var tooltip = d3.select("div.tooltip");
 d3.queue()
   .defer(d3.json, "world-atlas.json")
   .defer(d3.csv, "world-country-names.csv")
+  .defer(d3.csv, "TIV-Export-USA-1950-2021_custom.csv")
   .await(ready);
-function ready(error, world, names) {
+function ready(error, world, names, tiv) {
   if (error) throw error;
   var countries1 = topojson.feature(world, world.objects.countries).features;
     countries = countries1.filter(function(d) {
@@ -63,6 +64,11 @@ function ready(error, world, names) {
           if (d.id == n.id) {
             return (d.region = n.region);
           }
+        tiv.filter(function(t){
+          if (d.name == t.country){
+            return (d.tiv = t.twentytens);
+          }
+        })
         });
       });
     
@@ -79,7 +85,7 @@ function ready(error, world, names) {
                 tooltip.classed("hidden", false)
                        .style("top", (d3.event.pageY) + "px")
                        .style("left", (d3.event.pageX + 10) + "px")
-                       .html(d.name + ", "+ d.region);
+                       .html(d.name + ", "+ d.region + ", " + d.tiv);
             })
             .on("mouseout", removeTooltip);
 };
