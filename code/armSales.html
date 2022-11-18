@@ -4,6 +4,10 @@
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src="https://d3js.org/topojson.v2.min.js"></script>
   <script src="https://d3js.org/d3-queue.v3.min.js"></script>
+
+    <h1 style="text-align: center; color: deepskyblue">
+      <bold> United States Arms Sales </bold>
+    </h1>    
   <style>
 svg {
     width: 100%;
@@ -25,7 +29,7 @@ div.tooltip {
   </style>
 </head>
 
-<svg width="1200" height="900"></svg>
+<svg width="1200" height="850"></svg>
 <div class="tooltip"></div>
 <body>
 <script>
@@ -43,12 +47,11 @@ var svg = d3.select("svg")
             .append("g")
             .attr("width", width)
             .attr("height", height);
-    
 var tooltip = d3.select("div.tooltip");
 d3.queue()
   .defer(d3.json, "world-atlas.json")
   .defer(d3.csv, "world-country-names.csv")
-  .defer(d3.csv, "TIV-Export-USA-1950-2021_custom.csv")
+  .defer(d3.csv, "armSalesData.csv")
   .await(ready);
 function ready(error, world, names, tiv) {
   if (error) throw error;
@@ -62,11 +65,17 @@ function ready(error, world, names, tiv) {
     countries.map(function (d) {
         names.filter(function (n) {
           if (d.id == n.id) {
-            return (d.region = n.region);
+            return (d.subregion = n.subregion);
           }
         tiv.filter(function(t){
           if (d.name == t.country){
-            return (d.tiv = t.twentytens);
+            (d.twentytens = t.twentytens);
+            (d.twothousands = d.twothousands);
+            (d.nineties = d.nineties);
+            (d.eighties = d.eighties);
+            (d.seventies = d.seventies);
+            (d.sixties = d.sixties);
+            (d.fifties = d.fifties);
           }
         })
         });
@@ -82,34 +91,76 @@ function ready(error, world, names, tiv) {
 			.attr("d", path )
 			.on("mouseover",showTooltip)
             .on("mousemove",function(d){
+                if (d.name == "United States of America"){
+                    countryTooltip = "United States of America"
+                }else if (typeof d.twentytens == 'undefined'){
+                    countryTooltip = d.name + ", 0"
+                }
+                else{
+                    countryTooltip = d.name + ", "+ d.twentytens
+                }
                 tooltip.classed("hidden", false)
                        .style("top", (d3.event.pageY) + "px")
                        .style("left", (d3.event.pageX + 10) + "px")
-                       .html(d.name + ", "+ d.region + ", " + d.tiv);
+                       .html(countryTooltip);
             })
             .on("mouseout", removeTooltip);
 };
 function showTooltip(d){
-    if (d.region == "North America"){
-        fillColor = "green"
-    }else if (d.region == "Asia"){
-        fillColor = "yellow"
-    }else if (d.region == "Africa"){
-        fillColor = "orange"
-    }else if (d.region == "Oceania"){
-        fillColor = "purple"
-    }else if (d.region == "Europe"){
-        fillColor = "blue"
-    }
-    else{
-        fillColor = "red"
-    }
+    fillColor = "red"       
     d3.select(this).attr("fill", fillColor);
-    return tooltip.style("hidden", false).html(d.name + ", "+ d.region);
+    return tooltip.style("hidden", false).html(d.name + ", "+ d.twentytens);
 };
+    
+
+    
 function removeTooltip(d){
     d3.select(this).attr("fill","grey").attr("stroke-width",0.65);
     tooltip.classed("hidden", true);
 };
 </script>
 </body>
+<div id="option">
+        <input
+        name="1950s"
+        type="button"
+        value="1950s"
+        onclick="toggleColor()"
+      />
+        <input
+        name="1960s"
+        type="button"
+        value="1960s"
+        onclick="toggleCountyBoundary()"
+      />
+        <input
+        name="1970s"
+        type="button"
+        value="1970s"
+        onclick="toggleCountyBoundary()"
+      />
+        <input
+        name="1980s"
+        type="button"
+        value="1980s"
+        onclick="toggleCountyBoundary()"
+      />
+        <input
+        name="1990s"
+        type="button"
+        value="1990s"
+        onclick="toggleCountyBoundary()"
+      />
+        <input
+        name="2000s"
+        type="button"
+        value="2000s"
+        onclick="toggleCountyBoundary()"
+      />
+        <input
+        name="2010s"
+        type="button"
+        value= "2010s"
+        onclick="toggleCountyBoundary()"
+      />
+    </div>
