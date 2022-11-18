@@ -89,28 +89,35 @@ function ready(error, world, names, tiv) {
 			.attr("stroke-width",0.65)
             .attr("fill", "grey")
 			.attr("d", path )
-			.on("mouseover",showTooltip)
-            .on("mousemove",function(d){
-                if (d.name == "United States of America"){
-                    countryTooltip = "United States of America"
-                }else if (typeof d.twentytens == 'undefined'){
-                    countryTooltip = d.name + ", 0"
-                }
-                else{
-                    countryTooltip = d.name + ", "+ d.twentytens
-                }
-                tooltip.classed("hidden", false)
-                       .style("top", (d3.event.pageY) + "px")
-                       .style("left", (d3.event.pageX + 10) + "px")
-                       .html(countryTooltip);
-            })
+			.on("mouseover",hoverColorChange)
+            .on("mousemove",showTooltip)
             .on("mouseout", removeTooltip);
 };
-function showTooltip(d){
+function hoverColorChange(d){
     fillColor = "red"       
     d3.select(this).attr("fill", fillColor);
-    return tooltip.style("hidden", false).html(d.name + ", "+ d.twentytens);
 };
+function showTooltip(d){
+    if (typeof d.twentytens == 'undefined'){
+        d.twentytens = "0"
+    }
+    tooltip.classed("hidden", false)
+        .style("top", (d3.event.pageY) + "px")
+        .style("left", (d3.event.pageX + 10) + "px")
+        .html(
+        "<table>" +
+        "<tr><th>" +
+        d.name +
+        "</tr></th>"+
+        "<tr><td>"+
+        d.subregion+
+        "</tr><td>"+
+        "<tr><td>"+
+        d.twentytens+
+        "</tr><td>"+
+        "</table>"              
+        );
+}
     
 
     
