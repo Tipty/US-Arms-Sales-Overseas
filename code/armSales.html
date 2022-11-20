@@ -5,7 +5,7 @@
   <script src="https://d3js.org/topojson.v2.min.js"></script>
   <script src="https://d3js.org/d3-queue.v3.min.js"></script>
 
-    <h1 style="text-align: center; color: deepskyblue">
+    <h1 style="text-align: center; color: steelblue">
       <bold> United States Arms Sales </bold>
     </h1>    
   <style>
@@ -19,13 +19,21 @@ svg {
 }
 div.tooltip {
       color: #222; 
-      background: #BDE8F0; 
+      background: lightgreen; 
       border-radius: 3px; 
       box-shadow: 0px 0px 2px 0px #a6a6a6; 
       padding: .2em; 
       text-shadow: #f5f5f5 0 1px 0;
       opacity: 0.9; 
       position: absolute;
+      }
+table{
+    background: palegreen;
+    padding: 5px;
+    border-radius: 5px;
+    width: 100%;
+}
+
   </style>
 </head>
 
@@ -65,7 +73,7 @@ function ready(error, world, names, tiv) {
     countries.map(function (d) {
         names.filter(function (n) {
           if (d.id == n.id) {
-            return (d.subregion = n.subregion);
+            return (d.region = n.region);
           }
         tiv.filter(function(t){
           if (d.name == t.country){
@@ -93,9 +101,8 @@ function ready(error, world, names, tiv) {
             .on("mousemove",showTooltip)
             .on("mouseout", removeTooltip);
 };
-function hoverColorChange(d){
-    fillColor = "red"       
-    d3.select(this).attr("fill", fillColor);
+function hoverColorChange(d){     
+    d3.select(this).attr("fill", "deepskyblue");
 };
 function showTooltip(d){
     if (typeof d.twentytens == 'undefined'){
@@ -106,27 +113,30 @@ function showTooltip(d){
         .style("left", (d3.event.pageX + 10) + "px")
         .html(
         "<table>" +
-        "<tr><th>" +
-        d.name +
-        "</tr></th>"+
-        "<tr><td>"+
-        d.subregion+
-        "</tr><td>"+
-        "<tr><td>"+
+        //Country Name Row
+        "<tr><th>"+
+        d.name+
+        "</th></tr>"+
+        //Country Region Row
+        "<tr><td>Region: "+
+        d.region+
+        "</td></tr>"+
+        //Decade Row
+        "<tr><td>Decade: 2010s</td></tr>"+
+        //Country TIV row
+        "<tr><td>Trade Indicator Value: "+
         d.twentytens+
         "</tr><td>"+
         "</table>"              
         );
 }
-    
-
-    
 function removeTooltip(d){
     d3.select(this).attr("fill","grey").attr("stroke-width",0.65);
     tooltip.classed("hidden", true);
 };
 </script>
 </body>
+<h3>The data is measured in Trend Indicator Values (TIV).</h3>
 <div id="option">
         <input
         name="1950s"
