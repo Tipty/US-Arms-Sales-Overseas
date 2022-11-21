@@ -57,6 +57,7 @@ var bar = d3.select("#bar")
                 .attr("transform",
                       "translate(" + margin.left + "," + margin.top + ")");
 var tooltip = d3.select("div.tooltip");
+
 d3.queue()
   .defer(d3.json, "world-atlas.json")
   .defer(d3.csv, "world-country-names.csv")
@@ -79,12 +80,12 @@ function ready(error, world, names, tiv) {
         tiv.filter(function(t){
           if (d.name == t.country){
             (d.twentytens = t.twentytens);
-            (d.twothousands = d.twothousands);
-            (d.nineties = d.nineties);
-            (d.eighties = d.eighties);
-            (d.seventies = d.seventies);
-            (d.sixties = d.sixties);
-            (d.fifties = d.fifties);
+            (d.twothousands = t.twothousands);
+            (d.nineties = t.nineties);
+            (d.eighties = t.eighties);
+            (d.seventies = t.seventies);
+            (d.sixties = t.sixties);
+            (d.fifties = t.fifties);
           }
         })
         });
@@ -95,8 +96,8 @@ function ready(error, world, names, tiv) {
 			.append("path")
 			.attr("stroke","black")
 			.attr("stroke-width",0.65)
-            .attr("fill", "grey")
-			.attr("d", path )
+            .attr("fill", hoverColorChange)
+			.attr("d", path)
             .on("mousemove",showTooltip)
 			.on("mouseover",hoverColorChange)
             .on("mouseout", removeTooltip);
@@ -176,22 +177,20 @@ function ready(error, world, names, tiv) {
         .attr("font-size" , "13px")
         .attr("text-anchor", "middle");*/
 };
-    
 var fillColor = d3.scaleThreshold()
     .domain([10, 100, 250, 500,1000,2500, 5000, 10000])
     .range(d3.schemeOrRd[9]);
-
+    
 function hoverColorChange(d){
     if (typeof d.twentytens == 'undefined'){
         d.twentytens = "0"
-    }
-    d3.select(this).attr("fill", function(d) {
-        if (d.twentytens == 0 || d.twentytens == -1){
-            d3.select(this).attr("opacity",0.5)
+    }{
+    if (d.twentytens == 0 || d.twentytens == -1){
+         d3.select(this).attr("opacity",0.35)
             return "grey";
         }
         return fillColor(d.twentytens); 
-    });
+    };
 };
     
 function showTooltip(d){
@@ -221,7 +220,10 @@ function changebar (decade) {
 }
 
 function removeTooltip(d){
-    d3.select(this).attr("fill","grey").attr("stroke-width",0.65).attr("opacity",1);
+    d3.select(this).attr("fill",hoverColorChange).attr("stroke-width",0.65).attr("opacity",1);
+    if (d.twentytens == 0 || d.twentytens == -1){
+        d3.select(this).attr("opacity",0.35);
+    }
     tooltip.classed("hidden", true);
 };
 </script>
