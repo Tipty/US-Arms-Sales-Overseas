@@ -4,6 +4,7 @@
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src="https://d3js.org/topojson.v2.min.js"></script>
   <script src="https://d3js.org/d3-queue.v3.min.js"></script>
+  <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
     <h1 style="text-align: center; color: deepskyblue">
       <bold> United States Arms Sales </bold>
@@ -88,7 +89,7 @@ function ready(error, world, names, tiv) {
         })
         });
       });
-  svg.selectAll("path")
+         svg.selectAll("path")
 			.data(countries)
 			.enter()
 			.append("path")
@@ -96,8 +97,8 @@ function ready(error, world, names, tiv) {
 			.attr("stroke-width",0.65)
             .attr("fill", "grey")
 			.attr("d", path )
-			.on("mouseover",hoverColorChange)
             .on("mousemove",showTooltip)
+			.on("mouseover",hoverColorChange)
             .on("mouseout", removeTooltip);
     //console.log(tiv);
     var dec = ["fifties", "sixties", "seventies", "eighties", "nineties", "twothousands", "twentytens"]; //Each decade represented in tiv data
@@ -175,10 +176,24 @@ function ready(error, world, names, tiv) {
         .attr("font-size" , "13px")
         .attr("text-anchor", "middle");*/
 };
+    
+var fillColor = d3.scaleThreshold()
+    .domain([10, 100, 250, 500,1000,2500, 5000, 10000])
+    .range(d3.schemeOrRd[9]);
+
 function hoverColorChange(d){
-    fillColor = "red"       
-    d3.select(this).attr("fill", fillColor);
+    if (typeof d.twentytens == 'undefined'){
+        d.twentytens = "0"
+    }
+    d3.select(this).attr("fill", function(d) {
+        if (d.twentytens == 0 || d.twentytens == -1){
+            d3.select(this).attr("opacity",0.5)
+            return "grey";
+        }
+        return fillColor(d.twentytens); 
+    });
 };
+    
 function showTooltip(d){
     if (typeof d.twentytens == 'undefined'){
         d.twentytens = "0"
@@ -206,7 +221,7 @@ function changebar (decade) {
 }
 
 function removeTooltip(d){
-    d3.select(this).attr("fill","grey").attr("stroke-width",0.65);
+    d3.select(this).attr("fill","grey").attr("stroke-width",0.65).attr("opacity",1);
     tooltip.classed("hidden", true);
 };
 </script>
