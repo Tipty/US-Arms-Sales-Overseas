@@ -5,7 +5,7 @@
   <script src="https://d3js.org/topojson.v2.min.js"></script>
   <script src="https://d3js.org/d3-queue.v3.min.js"></script>
 
-    <h1 style="text-align: center; color: steelblue">
+    <h1 style="text-align: center; color: deepskyblue">
       <bold> United States Arms Sales </bold>
     </h1>    
   <style>
@@ -19,29 +19,22 @@ svg {
 }
 div.tooltip {
       color: #222; 
-      background: lightgreen; 
+      background: #BDE8F0; 
       border-radius: 3px; 
       box-shadow: 0px 0px 2px 0px #a6a6a6; 
       padding: .2em; 
       text-shadow: #f5f5f5 0 1px 0;
       opacity: 0.9; 
       position: absolute;
-      }
-table{
-    background: palegreen;
-    padding: 5px;
-    border-radius: 5px;
-    width: 100%;
-}
-
   </style>
 </head>
 
 <svg width="1200" height="850"></svg>
+<svg width="1200" height="850" id="bar"></svg>
 <div class="tooltip"></div>
 <body>
 <script>
-var margin = {top: 10, right: 10, bottom: 10, left: 10};
+var margin = {top: 10, right: 10, bottom: 100, left: 40};
 var width = 960 - margin.left - margin.right;
 var height = 500 - margin.top - margin.bottom;
 var projection = d3.geoNaturalEarth1()
@@ -55,6 +48,13 @@ var svg = d3.select("svg")
             .append("g")
             .attr("width", width)
             .attr("height", height);
+var bar = d3.select("#bar")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+                .attr("transform",
+                      "translate(" + margin.left + "," + margin.top + ")");
 var tooltip = d3.select("div.tooltip");
 d3.queue()
   .defer(d3.json, "world-atlas.json")
@@ -73,7 +73,7 @@ function ready(error, world, names, tiv) {
     countries.map(function (d) {
         names.filter(function (n) {
           if (d.id == n.id) {
-            return (d.region = n.region);
+            return (d.subregion = n.subregion);
           }
         tiv.filter(function(t){
           if (d.name == t.country){
@@ -88,7 +88,6 @@ function ready(error, world, names, tiv) {
         })
         });
       });
-    
   svg.selectAll("path")
 			.data(countries)
 			.enter()
@@ -100,9 +99,85 @@ function ready(error, world, names, tiv) {
 			.on("mouseover",hoverColorChange)
             .on("mousemove",showTooltip)
             .on("mouseout", removeTooltip);
+    //console.log(tiv);
+    var dec = ["fifties", "sixties", "seventies", "eighties", "nineties", "twothousands", "twentytens"]; //Each decade represented in tiv data
+    var decades = [{fifties: []}, {sixties: []}, {seventies: []}, {eighties: []}, {nineties: []}, {twothousands: []}, {twentytens: []}]; //Organized dataset
+    tiv.map(function(country) {
+        //console.log(country);
+        for (var x = 0; x < dec.length; x++) {
+            var pair = {country: country.country,
+                        tiv: country[dec[x]]};
+            decades[x][dec[x]].push(pair);
+        }
+    })
+    //console.log(decades);
+    for (var x = 0; x < dec.length; x++) { //Sorts each decade, least to most
+        decades[x][dec[x]] = decades[x][dec[x]].sort(function (a,b) {
+            return a.tiv - b.tiv;
+        })
+    }
+    var chosen = 6; //Index for the current decade
+    var top10 = []; //Empty array for top 10 countries from each decade
+    for (var x = 0; x < dec.length; x++) { //Gets top 10 countries from each decade
+        top10.push(decades[x][dec[x]].slice(160, 170));
+    }
+    //console.log(decades);
+    //console.log(top10);
+    var x = d3.scaleBand() //x axis
+        .range([0,width])
+        .domain(top10[chosen].map(function(decade) {
+            return decade.country;
+        }))
+        .padding(0.2);
+
+    bar.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x))
+        .selectAll("text")
+            .attr("transform", "translate(-10,0)rotate(-45)")
+            .style("text-anchor", "end")
+            .attr("font-size" , "13px");
+    topval = top10[chosen].map(function (country) { 
+        return parseInt(country.tiv);    
+    });
+    //console.log(topval);
+    var y = d3.scaleLinear()
+        .domain([0, Math.max(...topval)])
+        .range([height, 0])
+    bar.append("g")
+        .call(d3.axisLeft(y));
+    
+    console.log(top10[chosen]);
+    
+    bar.selectAll("rect")
+        .data(top10[chosen])
+        .enter()
+        .append("rect")
+        .attr("x", function(d) { return x(d.country); })
+        .attr("y", function(d) { return y(parseInt(d.tiv)); })
+        .attr("width", x.bandwidth())
+        .attr("height", function(d) { return height - y(d.tiv); })
+        .attr("fill", "grey");
+    /*bar.selectAll("text")
+        .data(top10[chosen])
+        .enter()
+        .append("text")
+        .text(function(d) {
+            return parseInt(d.tiv);
+        })
+        .attr("x", function(d) {
+            return x(d.country) + x.bandwidth() / 3.3;
+        })
+        .attr("y", function(d) {
+            return y(parseInt(d.tiv));
+        })
+        .attr("font-family" , "sans-serif")
+        .attr("font-size" , "13px")
+        .attr("text-anchor", "middle");*/
 };
-function hoverColorChange(d){     
-    d3.select(this).attr("fill", "deepskyblue");
+function hoverColorChange(d){
+    fillColor = "red"       
+    d3.select(this).attr("fill", fillColor);
 };
 function showTooltip(d){
     if (typeof d.twentytens == 'undefined'){
@@ -113,71 +188,117 @@ function showTooltip(d){
         .style("left", (d3.event.pageX + 10) + "px")
         .html(
         "<table>" +
-        //Country Name Row
-        "<tr><th>"+
-        d.name+
-        "</th></tr>"+
-        //Country Region Row
-        "<tr><td>Region: "+
-        d.region+
-        "</td></tr>"+
-        //Decade Row
-        "<tr><td>Decade: 2010s</td></tr>"+
-        //Country TIV row
-        "<tr><td>Trade Indicator Value: "+
+        "<tr><th>" +
+        d.name +
+        "</tr></th>"+
+        "<tr><td>"+
+        d.subregion+
+        "</tr><td>"+
+        "<tr><td>"+
         d.twentytens+
         "</tr><td>"+
         "</table>"              
         );
 }
+    
+function changebar (decade) {
+    chosen = decade;
+}
+
 function removeTooltip(d){
     d3.select(this).attr("fill","grey").attr("stroke-width",0.65);
     tooltip.classed("hidden", true);
 };
 </script>
 </body>
-<h3>The data is measured in Trend Indicator Values (TIV).</h3>
+
+<!--
 <div id="option">
         <input
         name="1950s"
         type="button"
         value="1950s"
-        onclick="toggleColor()"
+        onclick="toggleCountyBoundary();changebar('0');"
       />
         <input
         name="1960s"
         type="button"
         value="1960s"
-        onclick="toggleCountyBoundary()"
+        onclick="toggleCountyBoundary();changebar('1');"
       />
         <input
         name="1970s"
         type="button"
         value="1970s"
-        onclick="toggleCountyBoundary()"
+        onclick="toggleCountyBoundary();changebar('2');"
       />
         <input
         name="1980s"
         type="button"
         value="1980s"
-        onclick="toggleCountyBoundary()"
+        onclick="toggleCountyBoundary();changebar('3');"
       />
         <input
         name="1990s"
         type="button"
         value="1990s"
-        onclick="toggleCountyBoundary()"
+        onclick="toggleCountyBoundary();changebar('4');"
       />
         <input
         name="2000s"
         type="button"
         value="2000s"
-        onclick="toggleCountyBoundary()"
+        onclick="toggleCountyBoundary();changebar('5');"
       />
         <input
         name="2010s"
         type="button"
         value= "2010s"
-        onclick="toggleCountyBoundary()"
+        onclick="toggleCountyBoundary();changebar('6');"
+      />
+    </div>
+ -->
+<div id="option">
+        <input
+        name="1950s"
+        type="button"
+        value="1950s"
+        onclick="changebar('0');"
+      />
+        <input
+        name="1960s"
+        type="button"
+        value="1960s"
+        onclick="changebar('1');"
+      />
+        <input
+        name="1970s"
+        type="button"
+        value="1970s"
+        onclick="changebar('2');"
+      />
+        <input
+        name="1980s"
+        type="button"
+        value="1980s"
+        onclick="changebar('3');"
+      />
+        <input
+        name="1990s"
+        type="button"
+        value="1990s"
+        onclick="changebar('4');"
+      />
+        <input
+        name="2000s"
+        type="button"
+        value="2000s"
+        onclick="changebar('5');"
+      />
+        <input
+        name="2010s"
+        type="button"
+        value= "2010s"
+        onclick="changebar('6');"
       />
     </div>
