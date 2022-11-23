@@ -98,7 +98,7 @@ function ready(error, world, names, tiv) {
     var chosen = 6; //Index for the current decade
     var top10 = []; //Empty array for top 10 countries from each decade
     for (var x = 0; x < dec.length; x++) { //Gets top 10 countries from each decade
-        top10.push(decades[x][dec[x]].slice(160, 170));
+        top10.push(decades[x][dec[x]].slice(160, 171));
     }
     //console.log(decades);
     //console.log(top10);
