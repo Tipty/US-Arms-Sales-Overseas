@@ -21,11 +21,25 @@ var bar = d3.select("#bar")
                       "translate(" + margin.left + "," + margin.top + ")");
 var tooltip = d3.select("div.tooltip");
 
+var fillColor = d3.scaleThreshold()
+    .domain([10,100,250,500,1000,2500,5000,10000])
+    .range(d3.schemeYlOrRd[9]);
+var barColors = d3.scaleOrdinal(d3.schemeCategory10);
+
+
+//    /\                      |\**/|      
+//   /  \                     \ == /
+//   |  |                      |  |
+//   |  |      Main Code       |  |
+//  / == \                     \  /
+//  |/**\|                      \/
+
 d3.queue()
   .defer(d3.json, "world-atlas.json")
   .defer(d3.csv, "world-country-names.csv")
   .defer(d3.csv, "armSalesData.csv")
   .await(ready);
+
 function ready(error, world, names, tiv) {
   if (error) throw error;
   var countries1 = topojson.feature(world, world.objects.countries).features;
@@ -122,7 +136,10 @@ function ready(error, world, names, tiv) {
         .attr("y", function(d) { return y(parseInt(d.tiv)); })
         .attr("width", x.bandwidth())
         .attr("height", function(d) { return height - y(d.tiv); })
-        .attr("fill", "grey");
+        //.attr("fill", "grey")
+        .style("fill", function (d) {
+      return barColors(d.country);
+    });
     /*bar.selectAll("text")
         .data(top10[chosen])
         .enter()
@@ -140,9 +157,6 @@ function ready(error, world, names, tiv) {
         .attr("font-size" , "13px")
         .attr("text-anchor", "middle");*/
 };
-var fillColor = d3.scaleThreshold()
-    .domain([10,100,250,500,1000,2500,5000,10000])
-    .range(d3.schemeYlOrRd[9]);
     
 function hoverColorChange(d){
     if (typeof d.twentytens == 'undefined'){
@@ -157,7 +171,15 @@ function hoverColorChange(d){
         }
         return fillColor(d.twentytens); 
 };
-    
+
+//    /\                      |\**/|      
+//   /  \                     \ == /
+//   |  |                      |  |
+//   |  |   Helper Functions   |  |
+//  / == \                     \  /
+//  |/**\|                      \/
+
+
 function showTooltip(d){
     tooltipText = "<table>"+
         //Country Name Row
