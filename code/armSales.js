@@ -17,8 +17,7 @@ var bar = d3.select("#bar")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
-                .attr("transform",
-                      "translate(" + margin.left + "," + margin.top + ")");
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 var tooltip = d3.select("div.tooltip");
 
 var fillColor = d3.scaleThreshold()
@@ -78,6 +77,7 @@ function ready(error, world, names, tiv) {
             .on("mousemove",showTooltip)
 			.on("mouseover",hoverColorChange)
             .on("mouseout", removeTooltip);
+    
     //console.log(tiv);
     var dec = ["fifties", "sixties", "seventies", "eighties", "nineties", "twothousands", "twentytens"]; //Each decade represented in tiv data
     var decades = [{fifties: []}, {sixties: []}, {seventies: []}, {eighties: []}, {nineties: []}, {twothousands: []}, {twentytens: []}]; //Organized dataset
@@ -98,7 +98,7 @@ function ready(error, world, names, tiv) {
     var chosen = 6; //Index for the current decade
     var top10 = []; //Empty array for top 10 countries from each decade
     for (var x = 0; x < dec.length; x++) { //Gets top 10 countries from each decade
-        top10.push(decades[x][dec[x]].slice(160, 171));
+        top10.push(decades[x][dec[x]].slice(161, 171));
     }
     //console.log(decades);
     //console.log(top10);
@@ -136,10 +136,9 @@ function ready(error, world, names, tiv) {
         .attr("y", function(d) { return y(parseInt(d.tiv)); })
         .attr("width", x.bandwidth())
         .attr("height", function(d) { return height - y(d.tiv); })
-        //.attr("fill", "grey")
         .style("fill", function (d) {
-      return barColors(d.country);
-    });
+            return barColors(d.country);
+        });
     /*bar.selectAll("text")
         .data(top10[chosen])
         .enter()
@@ -157,20 +156,6 @@ function ready(error, world, names, tiv) {
         .attr("font-size" , "13px")
         .attr("text-anchor", "middle");*/
 };
-    
-function hoverColorChange(d){
-    if (typeof d.twentytens == 'undefined'){
-        d.twentytens = "0"
-    }
-    if (d.name == "United States of America"){
-        return "dodgerblue";
-    }
-    if (d.twentytens == 0 || d.twentytens == -1){
-         d3.select(this).attr("opacity",0.35)
-            return "grey";
-        }
-        return fillColor(d.twentytens); 
-};
 
 //    /\                      |\**/|      
 //   /  \                     \ == /
@@ -179,9 +164,28 @@ function hoverColorChange(d){
 //  / == \                     \  /
 //  |/**\|                      \/
 
+function hoverColorChange(d){
+    if (typeof d.twentytens == 'undefined'){
+        d.twentytens = "0"
+    }
+    if (d.name == "United States of America"){
+        return "lightskyblue";
+    }
+    if (d.twentytens == 0){
+         d3.select(this).attr("opacity",0.35)
+            return "grey";
+        }
+    return fillColor(d.twentytens); 
+};
 
 function showTooltip(d){
-    tooltipText = "<table>"+
+    values = getRegionColor(d.region);
+    tableColor = values[0]
+    borderColor = values[1]
+    
+    tooltipText = "<table style='background-color:"+
+        tableColor+
+        "';>"+
         //Country Name Row
         "<tr><th>"+
         d.name+
@@ -207,11 +211,13 @@ function showTooltip(d){
     tooltip.classed("hidden", false)
         .style("top", (d3.event.pageY) + "px")
         .style("left", (d3.event.pageX + 10) + "px")
+        .style("background", borderColor)
         .html(tooltipText);
 }
 function changebar (decade) {
     chosen = decade;
 }
+
 
 function removeTooltip(d){
     d3.select(this).attr("fill",hoverColorChange).attr("stroke-width",0.65).attr("opacity",1);
@@ -219,4 +225,32 @@ function removeTooltip(d){
         d3.select(this).attr("opacity",0.35);
     }
     tooltip.classed("hidden", true);
+}
+function getRegionColor (countryRegion){
+    switch (countryRegion) {
+        case "North America":
+            return ["silver","slategray"]
+            break;
+        case "South America":
+            return ["paleGreen","lightGreen"]
+            break;
+        case "Africa":
+            return ["yellow","gold"]
+            break;
+        case "Europe":
+            return ["paleturquoise","lightcyan"]
+            break;
+        case "Asia":
+            return ["palegoldenrod","goldenrod"]
+            break;
+        case "Middle East":
+            return ["lightpink","indianred"]
+            break;
+        case "Oceania":
+            return ["violet","hotpink"]
+            break;
+        default:
+            return ["white","black"]
+
+    }
 };
