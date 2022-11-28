@@ -9,14 +9,10 @@
   <h1> United States Arms Sales </h1>  
 </head>
 
-<svg width="1200" height="450"></svg>
-<svg width="1200" height="350" id="bar"></svg>
-<div class="tooltip"></div>
+<svg width="1200" height="300" id="map"></svg>
 
-<body>
-<script type="text/javascript" src="armSales.js"></script>
-</body>
-<h2>Data measured in Trend Indicator Values(TIV). TIVs are based on the known unit production cost of weapons and represents the transfer of military resources rather than the financial value of the transfer. </h2>
+<h2 id = "desc">Data measured in Trend Indicator Values(TIV). TIVs are based on the known unit <br> production cost of weapons and represents the transfer of military resources rather<br> than the financial value of the transfer. </h2>
+<h3 id="instruct">Use these buttons to change the decade</h3>
 <div id="option">
         <input
         id="dec0"
@@ -61,3 +57,10 @@
         2010s
       />
     </div>
+
+<svg width="1200" height="350" id="bar"></svg>
+<div class="tooltip"></div>
+
+<body>
+<script type="text/javascript" src="armSales.js"></script>
+</body>

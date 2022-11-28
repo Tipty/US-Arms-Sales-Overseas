@@ -1,6 +1,7 @@
 h1{
     color: steelblue;
     text-align: center;
+    font-size: 50px;
 }
 svg {
     width: 100%;
@@ -25,4 +26,32 @@ table{
     padding: 5px;
     border-radius: 5px;
     width: 100%;
+}
+
+#option {
+    position: absolute;
+    bottom: 550px;
+    right: 550px;
+}
+
+#desc {
+    position: absolute;
+    top: 600px;
+    right: 300px;
+}
+
+#instruct {
+    position: absolute;
+    right: 600px;
+    top: 690px;
+}
+
+#map {
+    position: relative;
+    left: 300px;
+}
+
+#bar {
+    position: relative;
+    left: 300px;
 }
