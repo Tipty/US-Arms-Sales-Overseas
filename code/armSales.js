@@ -77,6 +77,15 @@ function ready(error, world, names, tiv) {
             .on("mousemove",showTooltip)
 			.on("mouseover",hoverColorChange)
             .on("mouseout", removeTooltip);
+    /*
+    
+    - | | 
+    - | |       | |
+    - | |       | |
+    - | |  | |  | |     BAR GRAPH
+    - | |  | |  | |
+    i i i i i i i i i
+    */
     
     //console.log(tiv);
     var dec = ["fifties", "sixties", "seventies", "eighties", "nineties", "twothousands", "twentytens"]; //Each decade represented in tiv data
@@ -100,6 +109,79 @@ function ready(error, world, names, tiv) {
     for (var x = 0; x < dec.length; x++) { //Gets top 10 countries from each decade
         top10.push(decades[x][dec[x]].slice(161, 171));
     }
+    
+    d3.select("#dec0").on("click", update);
+    d3.select("#dec1").on("click", update);
+    d3.select("#dec2").on("click", update);
+    d3.select("#dec3").on("click", update);
+    d3.select("#dec4").on("click", update);
+    d3.select("#dec5").on("click", update);
+    d3.select("#dec6").on("click", update);
+    
+    function update() {
+        if (this.value === "1950s") {
+            chosen = 0;
+        }
+        if (this.value === "1960s") {
+            chosen = 1;
+        }
+        if (this.value === "1970s") {
+            chosen = 2;
+        }
+        if (this.value === "1980s") {
+            chosen = 3;
+        }
+        if (this.value === "1990s") {
+            chosen = 4;
+        }
+        if (this.value === "2000s") {
+            chosen = 5;
+        }
+        if (this.value === "2010s") {
+            chosen = 6;
+        }
+        bar.selectAll("rect").remove();
+        bar.selectAll("g.myXaxis").remove();
+        bar.selectAll("g.myYaxis").remove();
+        
+        var x = d3.scaleBand() //x axis
+        .range([0,width])
+        .domain(top10[chosen].map(function(decade) {
+            return decade.country;
+        }))
+        .padding(0.2);
+
+        bar.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .attr("class", "myXaxis")
+            .call(d3.axisBottom(x))
+            .selectAll("text")
+                .attr("transform", "translate(-10,0)rotate(-45)")
+                .style("text-anchor", "end")
+                .attr("font-size" , "13px");
+        topval = top10[chosen].map(function (country) { 
+            return parseInt(country.tiv);    
+        });
+        //console.log(topval);
+        var y = d3.scaleLinear()
+            .domain([0, Math.max(...topval)])
+            .range([height, 0])
+        bar.append("g")
+            .attr("class", "myYaxis")
+            .call(d3.axisLeft(y));
+
+            bar.selectAll("rect")
+            .data(top10[chosen])
+            .enter()
+            .append("rect")
+            .attr("x", function(d) { return x(d.country); })
+            .attr("y", function(d) { return y(parseInt(d.tiv)); })
+            .attr("width", x.bandwidth())
+            .attr("height", function(d) { return height - y(d.tiv); })
+            .style("fill", function (d) {
+                return barColors(d.country);
+            });
+        }
     //console.log(decades);
     //console.log(top10);
     var x = d3.scaleBand() //x axis
@@ -111,6 +193,7 @@ function ready(error, world, names, tiv) {
 
     bar.append("g")
         .attr("transform", "translate(0," + height + ")")
+        .attr("class", "myXaxis")
         .call(d3.axisBottom(x))
         .selectAll("text")
             .attr("transform", "translate(-10,0)rotate(-45)")
@@ -124,9 +207,10 @@ function ready(error, world, names, tiv) {
         .domain([0, Math.max(...topval)])
         .range([height, 0])
     bar.append("g")
+        .attr("class", "myYaxis")
         .call(d3.axisLeft(y));
     
-    console.log(top10[chosen]);
+    //console.log(top10[chosen]);
     
     bar.selectAll("rect")
         .data(top10[chosen])
@@ -139,22 +223,7 @@ function ready(error, world, names, tiv) {
         .style("fill", function (d) {
             return barColors(d.country);
         });
-    /*bar.selectAll("text")
-        .data(top10[chosen])
-        .enter()
-        .append("text")
-        .text(function(d) {
-            return parseInt(d.tiv);
-        })
-        .attr("x", function(d) {
-            return x(d.country) + x.bandwidth() / 3.3;
-        })
-        .attr("y", function(d) {
-            return y(parseInt(d.tiv));
-        })
-        .attr("font-family" , "sans-serif")
-        .attr("font-size" , "13px")
-        .attr("text-anchor", "middle");*/
+    
 };
 
 //    /\                      |\**/|      
@@ -214,10 +283,6 @@ function showTooltip(d){
         .style("background", borderColor)
         .html(tooltipText);
 }
-function changebar (decade) {
-    chosen = decade;
-}
-
 
 function removeTooltip(d){
     d3.select(this).attr("fill",hoverColorChange).attr("stroke-width",0.65).attr("opacity",1);
