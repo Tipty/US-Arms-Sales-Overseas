@@ -24,7 +24,7 @@ var fillColor = d3.scaleThreshold()
     .domain([10,100,250,500,1000,2500,5000,10000])
     .range(d3.schemeYlOrRd[9]);
 var barColors = d3.scaleOrdinal(d3.schemeCategory10);
-
+var Year = 2010;
 
 //    /\                      |\**/|      
 //   /  \                     \ == /
@@ -244,24 +244,31 @@ function ready(error, world, names, tiv) {
 function updateMap(chosen){
         countries.map(function (d) {
         if (chosen === 0) {
+            Year = 1950;
             d.current = d.fifties;
         }
         if (chosen === 1) {
+            Year = 1960;
             d.current = d.sixties;
         }
         if (chosen === 2) {
+            Year = 1970;
             d.current = d.seventies;
         }
         if (chosen === 3) {
+            Year = 1980;
             d.current = d.eighties;
         }
         if (chosen === 4) {
+            Year = 1990;
             d.current = d.nineties;
         }
         if (chosen === 5) {
+            Year = 2000;
             d.current = d.twothousands;
         }
         if (chosen === 6) {
+            Year = 2010;
             d.current = d.twentytens;
         }
         map
@@ -307,7 +314,7 @@ function showTooltip(d){
         d.region+
         "</td></tr>"+
         //Decade Row
-        "<tr><td>Time Period: 2010s</td></tr>";
+        "<tr><td>Time Period: " + Year +"s</td></tr>";
     if(d.name != "United States of America"){
         tooltipText +=
         //Country TIV row
