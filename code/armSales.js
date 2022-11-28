@@ -39,6 +39,7 @@ d3.queue()
   .defer(d3.csv, "armSalesData.csv")
   .await(ready);
 
+
 function ready(error, world, names, tiv) {
   if (error) throw error;
   var countries1 = topojson.feature(world, world.objects.countries).features;
@@ -55,6 +56,7 @@ function ready(error, world, names, tiv) {
           }
         tiv.filter(function(t){
           if (d.name == t.country){
+            (d.current = t.twentytens);
             (d.twentytens = t.twentytens);
             (d.twothousands = t.twothousands);
             (d.nineties = t.nineties);
@@ -66,7 +68,7 @@ function ready(error, world, names, tiv) {
         })
         });
       });
-         svg.selectAll("path")
+     map = svg.selectAll("path")
 			.data(countries)
 			.enter()
 			.append("path")
@@ -77,6 +79,8 @@ function ready(error, world, names, tiv) {
             .on("mousemove",showTooltip)
 			.on("mouseover",hoverColorChange)
             .on("mouseout", removeTooltip);
+
+
     /*
     
     - | | 
@@ -118,6 +122,7 @@ function ready(error, world, names, tiv) {
     d3.select("#dec5").on("click", update);
     d3.select("#dec6").on("click", update);
     
+    update();
     function update() {
         if (this.value === "1950s") {
             chosen = 0;
@@ -140,6 +145,7 @@ function ready(error, world, names, tiv) {
         if (this.value === "2010s") {
             chosen = 6;
         }
+        updateMap(chosen);
         bar.selectAll("rect").remove();
         bar.selectAll("g.myXaxis").remove();
         bar.selectAll("g.myYaxis").remove();
@@ -180,7 +186,9 @@ function ready(error, world, names, tiv) {
             .attr("height", function(d) { return height - y(d.tiv); })
             .style("fill", function (d) {
                 return barColors(d.country);
-            });
+            })
+            .on("mousemove",showTooltipBar)
+            .on("mouseout", function(d) {return tooltip.classed("hidden", true);});
         }
     //console.log(decades);
     //console.log(top10);
@@ -233,25 +241,60 @@ function ready(error, world, names, tiv) {
 //  / == \                     \  /
 //  |/**\|                      \/
 
+function updateMap(chosen){
+        countries.map(function (d) {
+        if (chosen === 0) {
+            d.current = d.fifties;
+        }
+        if (chosen === 1) {
+            d.current = d.sixties;
+        }
+        if (chosen === 2) {
+            d.current = d.seventies;
+        }
+        if (chosen === 3) {
+            d.current = d.eighties;
+        }
+        if (chosen === 4) {
+            d.current = d.nineties;
+        }
+        if (chosen === 5) {
+            d.current = d.twothousands;
+        }
+        if (chosen === 6) {
+            d.current = d.twentytens;
+        }
+        map
+            .attr("fill", hoverColorChange)
+            .on("mousemove",showTooltip)
+			.on("mouseover",hoverColorChange)
+            .on("mouseout", removeTooltip);
+        });
+}
+
 function hoverColorChange(d){
-    if (typeof d.twentytens == 'undefined'){
-        d.twentytens = "0"
+    if (typeof d.current == 'undefined'){
+        d.current = "0"
     }
     if (d.name == "United States of America"){
         return "lightskyblue";
     }
-    if (d.twentytens == 0){
+    if (d.current == 0){
          d3.select(this).attr("opacity",0.35)
             return "grey";
         }
-    return fillColor(d.twentytens); 
+    else{
+        d3.select(this).attr("opacity",1)
+    }
+    return fillColor(d.current); 
 };
+
 
 function showTooltip(d){
     values = getRegionColor(d.region);
     tableColor = values[0]
     borderColor = values[1]
-    
+    //console.log(d);
     tooltipText = "<table style='background-color:"+
         tableColor+
         "';>"+
@@ -269,13 +312,13 @@ function showTooltip(d){
         tooltipText +=
         //Country TIV row
         "<tr><td>Trade Indicator Value: "+
-        d.twentytens+
+        d.current+
         "</tr></td>"
     }
     tooltipText += "</table>"
     
-    if (typeof d.twentytens == 'undefined'){
-        d.twentytens = "0"
+    if (typeof d.current == 'undefined'){
+        d.current = "0"
     }
     tooltip.classed("hidden", false)
         .style("top", (d3.event.pageY) + "px")
@@ -284,9 +327,30 @@ function showTooltip(d){
         .html(tooltipText);
 }
 
+function showTooltipBar(d){
+    //console.log(d);
+    tooltipText = "<table style='background-color:"+
+        "palegreen"+
+        "';>"+
+        //Country Name Row
+        "<tr><th>"+
+        d.country+
+        "</th></tr>"+
+        //Country Region Row
+        "<tr><td>Trade Indicator Value: "+
+        d.tiv+
+        "</td></tr>";
+    tooltipText += "</table>"
+    tooltip.classed("hidden", false)
+        .style("top", (d3.event.pageY) + "px")
+        .style("left", (d3.event.pageX + 10) + "px")
+        .html(tooltipText);
+}
+
 function removeTooltip(d){
+    console.log(d.current);
     d3.select(this).attr("fill",hoverColorChange).attr("stroke-width",0.65).attr("opacity",1);
-    if (d.twentytens == 0 ){
+    if (d.current == 0 ){
         d3.select(this).attr("opacity",0.35);
     }
     tooltip.classed("hidden", true);
