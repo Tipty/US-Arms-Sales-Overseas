@@ -5,64 +5,77 @@
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src="https://d3js.org/topojson.v2.min.js"></script>
   <script src="https://d3js.org/d3-queue.v3.min.js"></script>
-  <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>  
-  <h1> United States Arms Sales </h1>  
+  <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script> 
+  <script src="https://unpkg.com/d3-simple-slider"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3-time-format@4"></script>
+    
+  <h1> United States Arms Sales </h1> 
+  <h2>International arms transfers exported from the United States from 1950 to 2019</h2>
+  <p align="center"> Data measured in Trend Indicator Values(TIV). TIVs are based on the known unit <br> production cost of weapons and represents the transfer of military resources.</p>
 </head>
 
+<svg width="1200" height="600" id="map" style="transform: translate(20vw, 0);"></svg>
 
-<svg width="1200" height="600" id="map" style="transform: translate(10vw, 0)"></svg>
+<div  style="transform: translate(38vw, -15vh);" class="row-align-items-center">
+    <p style ="font-size: 18" id="value-time"></p>
+    <div id="slider-time"></div>
+</div>
+
+<div style="transform: translate(38vw, -5vh);" class="row-align-items-center">
+    <p id="topTen" class="barChartHeader"></p>
+</div>
+
+<svg height="320" style="transform: translate(75vw, -5vh);" id="leg"></svg>
+
+<svg width="1200" height="350" style="transform: translate(15vw, -35vh);" id="bar"></svg>
 
 
-<h2 id = "desc">Data measured in Trend Indicator Values(TIV). TIVs are based on the known unit <br> production cost of weapons and represents the transfer of military resources rather<br> than the financial value of the transfer. </h2>
-<h3 id="instruct">Use these buttons to change the decade</h3>
-<div id="option">
-        <input
-        id="dec0"
-        type="button"
-        value="1950s"
-        1950s
-      />
-        <input
-        id="dec1"
-        type="button"
-        value="1960s"
-        1960s
-      />
-        <input
-        id="dec2"
-        type="button"
-        value="1970s"
-        1970s
-      />
-        <input
-        id="dec3"
-        type="button"
-        value="1980s"
-        1980s
-      />
-        <input
-        id="dec4"
-        type="button"
-        value="1990s"
-        1990s
-      />
-        <input
-        id="dec5"
-        type="button"
-        value="2000s"
-        2000s
-      />
-        <input
-        id="dec6"
-        type="button"
-        value= "2010s"
-        2010s
-      />
-    </div>
-
-<svg width="1200" height="350" id="bar"></svg>
 <div class="tooltip"></div>
 
 <body>
 <script type="text/javascript" src="armSales.js"></script>
+<div style="background-color:#ADD8E6;">
+<p align='center'> <br> <b style="color: royalblue;">Created by</b> <br> Tom Fu (cfu19@ucsc.edu) <br> Turner Lu (tlu32@ucsc.edu) <br> James Dinh (jatdinh@ucsc.edu) <br> Brian Le (ble98@ucsc.edu)</p>  
+<p align='center'> <br> <b style="color: royalblue;">In Collaboration With</b> <br> Instructor: Suresh Lodha <br> Teaching Assitants: Jacob Low and Omkar Ghanekar</p>  
+<p align='center'> <br> <b style="color: royalblue;">Designed For</b> <br> University of California, Santa Cruz <br> CMPS 163: Data programming for Visualization <br>Fall 2022 </p>  
+<a style="text-align:center" href="https://bl.ocks.org/lkopacz/dfd9cc04a4d5a5f0fe87c89a79524479" target = "_blank"><br><p align='center'>Github Link</p></a>
+</div>
+    <footer class='footer'>
+        <div class='container'>
+            <div class="row">
+                <div class="footer-col">
+                    <h4>Files:</h4>
+                    <ul>
+                      <li>armSales.css</li>
+                      <li>armSales.html</li>    
+                      <li>armSales.js</li>  
+                      <li>armSalesData.csv</li>  
+                      <li>world-atlas.json</li>
+                      <li>world-country-names.csv</li>
+                    </ul>  
+                </div>
+                <div class="footer-col">
+                    <h4>Visual Sources:</h4>
+                    <ul>
+                      <li><a href="https://bl.ocks.org/lkopacz/dfd9cc04a4d5a5f0fe87c89a79524479" target = "_blank">Country Names</a></li>
+                      <li><a href="https://https://bl.ocks.org/mbostock/5562380" target = "_blank">California Density Map</a></li>    
+                      <li><a href="https://sureshlodha.github.io/CMPS263_Winter2018/CMPS263FinalProjects/ChineseHistory/index.html" target = "_blank">Footer Layout</a></li>   
+                    </ul> 
+                </div>
+                <div class="footer-col">
+                    <h4>Code Sources:</h4>
+                    <ul>
+                      <li><a href="https://d3-graph-gallery.com/graph/custom_legend.html" target = "_blank">Simple Legend</a></li>
+                    </ul>  
+                </div>
+                <div class="footer-col">
+                    <h4>Data Sources:</h4>
+                    <ul>
+                      <li><a href="https://armstrade.sipri.org/armstrade/page/values.php" target = "_blank">TSV Data</a></li>
+                      <li><a href="https://geojson-maps.ash.ms/" target = "_blank">World Map</a></li>
+                    </ul>  
+                </div>
+            </div>
+        </div>
+    </footer>
 </body>
